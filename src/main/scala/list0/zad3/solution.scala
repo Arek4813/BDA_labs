@@ -11,7 +11,7 @@ object solution {
     val sublist = new ListBuffer[String]()
     val list: List[String] = given_string.split(' ').toList
     for (subelement <- list) {
-      val cleaned_subelement = subelement.replace(",", "").replace(".", "").replace(":", "").replace("[", "").replace("]", "")
+      val cleaned_subelement = subelement.replaceAll("[^A-Za-z0-9']", "")
       if (cleaned_subelement.nonEmpty) {
         sublist += cleaned_subelement
       }
@@ -33,7 +33,7 @@ object solution {
     for(element<-lines){
       val small_list: List[String] = element.split(' ').toList
       for(subelement<-small_list) {
-        val cleaned_subelement = subelement.replace(",", "").replace(".", "").replace(":", "").replace("[", "").replace("]", "")
+        val cleaned_subelement = subelement.replaceAll("[^A-Za-z0-9']", "")
         if (cleaned_subelement.nonEmpty) {
           sublist += cleaned_subelement
         }
@@ -58,6 +58,8 @@ object solution {
     val bw = new BufferedWriter(new FileWriter(csv_file))
     for(el_to_write<-original_map.toSeq.sortBy(_._2)(Ordering[Int].reverse).take(n).toMap.keys){
       bw.write(el_to_write)
+      bw.write(" ")
+      bw.write(String.valueOf(original_map.get(el_to_write).get))
       bw.write("\n")
     }
     bw.close()
@@ -77,22 +79,29 @@ object solution {
       println("2) Give file")
       println("3) Print selected number of most frequent words")
       println("4) Write selected number of most frequent words to csv file")
-      val decision = scala.io.StdIn.readLine().toInt
-      if(decision == 1){
-        println("1) Give pure string:")
-        my_map = text_input(scala.io.StdIn.readLine().toString, my_map, lines_stopwords)
-      }
-      if(decision == 2){
-        println("2) Give path to string file:")
-        my_map = text_input_file(scala.io.StdIn.readLine().toString, my_map, lines_stopwords)
-      }
-      if(decision == 3){
-        println("3) Give number:")
-        word_cloud_output_console(my_map, scala.io.StdIn.readLine().toInt)
-      }
-      if(decision == 4){
-        println("4) Give number:")
-        word_cloud_output_to_file(my_map, scala.io.StdIn.readLine().toInt)
+      try {
+        val decision = scala.io.StdIn.readLine().toInt
+        if(decision == 1){
+          println("1) Give pure string:")
+          my_map = text_input(scala.io.StdIn.readLine().toString, my_map, lines_stopwords)
+        }
+        else if(decision == 2){
+          println("2) Give path to string file:")
+          my_map = text_input_file(scala.io.StdIn.readLine().toString, my_map, lines_stopwords)
+        }
+        else if(decision == 3){
+          println("3) Give number:")
+          word_cloud_output_console(my_map, scala.io.StdIn.readLine().toInt)
+        }
+        else if(decision == 4){
+          println("4) Give number:")
+          word_cloud_output_to_file(my_map, scala.io.StdIn.readLine().toInt)
+        }
+        else {
+          println("Bad choice - choose number from 1 to 4")
+        }
+      } catch {
+        case e: NumberFormatException => println("Bad choice - give number, not string")
       }
     }
 

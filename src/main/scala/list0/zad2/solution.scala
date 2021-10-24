@@ -11,13 +11,13 @@ object solution {
     for(element<-lines){
       val small_list: List[String] = element.split(' ').toList
       for(subelement<-small_list) {
-        val cleaned_subelement = subelement.replace(",", "").replace(".", "").replace(":", "").replace("[", "").replace("]", "")
+        val cleaned_subelement = subelement.replaceAll("[^A-Za-z0-9']", "")
         if (cleaned_subelement.nonEmpty) {
           sublist += cleaned_subelement
         }
       }
     }
-    val real_list = sublist.toList // poprawic jakość ?
+    val real_list = sublist.toList
 
     val filename_stopwords = "stop_words_english.txt"
     val lines_stopwords = Source.fromFile(filename_stopwords).getLines.toList
